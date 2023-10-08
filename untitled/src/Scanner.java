@@ -76,6 +76,45 @@ public class Scanner {
                     estado = 0;
                     lexema = "";
                     break;
+                case 4:
+                    if(c == '=') {
+                        lexema += c;
+                        Token t = new Token(TipoToken.LESS_EQUAL, lexema);
+                        tokens.add(t);
+                    }else{
+                        Token t = new Token(TipoToken.LESS, lexema);
+                        tokens.add(t);
+                        i--;
+                    }
+                    estado = 0;
+                    lexema = "";
+                    break;
+                case 7:
+                    if(c == '=') {
+                        lexema += c;
+                        Token t = new Token(TipoToken.EQUAL_EQUAL, lexema);
+                        tokens.add(t);
+                    }else{
+                        Token t = new Token(TipoToken.EQUAL, lexema);
+                        tokens.add(t);
+                        i--;
+                    }
+                    estado = 0;
+                    lexema = "";
+                    break;
+                case 10:
+                    if(c == '=') {
+                        lexema += c;
+                        Token t = new Token(TipoToken.BANG_EQUAL, lexema);
+                        tokens.add(t);
+                    }else{
+                        Token t = new Token(TipoToken.BANG, lexema);
+                        tokens.add(t);
+                        i--;
+                    }
+                    estado = 0;
+                    lexema = "";
+                    break;
                 case 13:
                     if(Character.isLetterOrDigit(c)){
                         estado = 13;
