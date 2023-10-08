@@ -152,7 +152,8 @@ public class Scanner {
                         lexema += c;
                     }
                     else if(c == 'E'){
-
+                        estado = 18;
+                        lexema += c;
                     }
                     else{
                         Token t = new Token(TipoToken.NUMBER, lexema, Integer.valueOf(lexema));
