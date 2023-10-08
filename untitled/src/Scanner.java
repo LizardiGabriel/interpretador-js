@@ -51,15 +51,31 @@ public class Scanner {
                         lexema += c;
                     }else if(c == '>') {
                         estado = 1;
+                        lexema += c;
                     }else if(c == '<') {
                         estado = 4;
+                        lexema += c;
                     }else if(c == '=') {
                         estado = 7;
+                        lexema += c;
                     }else if(c == '!') {
                         estado = 10;
+                        lexema += c;
                     }
                     break;
-
+                case 1:
+                    if(c == '=') {
+                        lexema += c;
+                        Token t = new Token(TipoToken.GREATER_EQUAL, lexema);
+                        tokens.add(t);
+                    }else{
+                        Token t = new Token(TipoToken.GREATER, lexema);
+                        tokens.add(t);
+                        i--;
+                    }
+                    estado = 0;
+                    lexema = "";
+                    break;
                 case 13:
                     if(Character.isLetterOrDigit(c)){
                         estado = 13;
