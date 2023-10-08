@@ -34,12 +34,15 @@ public class Scanner {
 
     public List<Token> scan() throws Exception {
         int estado = 0;
+        int cont_line = 0;
         String lexema = "";
         char c;
 
         for(int i=0; i<source.length(); i++){
             c = source.charAt(i);
-
+            if (c == '\n') {
+                cont_line++;
+            }
             switch (estado){
                 case 0:
                     if(Character.isLetter(c)){
@@ -145,7 +148,8 @@ public class Scanner {
                         lexema += c;
                     }
                     else if(c == '.'){
-
+                        estado = 16;
+                        lexema += c;
                     }
                     else if(c == 'E'){
 
@@ -154,6 +158,63 @@ public class Scanner {
                         Token t = new Token(TipoToken.NUMBER, lexema, Integer.valueOf(lexema));
                         tokens.add(t);
 
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+                    break;
+                case 16:
+                    if(Character.isDigit(c)) {
+                        estado = 17;
+                        lexema += c;
+                    }else {
+                        Interprete.error(cont_line, "Faltan argumentos al numero decimal.");
+                        Interprete.existenErrores = true;
+                    }
+                    break;
+                case 17:
+                    if(Character.isDigit(c)) {
+                        estado = 17;
+                        lexema += c;
+                    } else if (c == 'E') {
+                        estado = 18;
+                        lexema += c;
+                    }else{
+                        Token t = new Token(TipoToken.NUMBER, lexema, Float.valueOf(lexema));
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+                    break;
+                case 18:
+                    if(c == '+' || c == '-') {
+                        estado = 19;
+                        lexema += c;
+                    } else if (Character.isDigit(c)) {
+                        estado = 20;
+                        lexema += c;
+                    }else{
+                        Interprete.error(cont_line, "Faltan argumentos en el exponente.");
+                        Interprete.existenErrores = true;
+                    }
+                    break;
+                case 19:
+                    if (Character.isDigit(c)) {
+                        estado = 20;
+                        lexema += c;
+                    }else{
+                        Interprete.error(cont_line, "Faltan argumentos en el exponente.");
+                        Interprete.existenErrores = true;
+                    }
+                    break;
+                case 20:
+                    if (Character.isDigit(c)) {
+                        estado = 20;
+                        lexema += c;
+                    }else{
+                        Token t = new Token(TipoToken.NUMBER, lexema, Float.valueOf(lexema));
+                        tokens.add(t);
                         estado = 0;
                         lexema = "";
                         i--;
