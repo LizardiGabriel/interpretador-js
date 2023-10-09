@@ -292,10 +292,13 @@ public class Scanner {
                         lexema = "";
                         lexema2 = "";
                     }else if(c != '\n'){
-                        lexema += c;
-                        lexema2 += c;
-                        estado = 24;
-
+                        if(i == source.length() - 1)
+                            Interprete.error(cont_line, "String no cerrado");
+                        else {
+                            lexema += c;
+                            lexema2 += c;
+                            estado = 24;
+                        }
                     }else{
                         Interprete.error(cont_line, "un string no puede contener saltos de linea.");
                     }
