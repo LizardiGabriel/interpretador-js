@@ -244,7 +244,6 @@ public class Scanner {
                         lexema += c;
                     }else {
                         Interprete.error(cont_line, "Faltan argumentos al numero decimal.");
-                        Interprete.existenErrores = true;
                     }
                     break;
                 case 17:
@@ -271,7 +270,6 @@ public class Scanner {
                         lexema += c;
                     }else{
                         Interprete.error(cont_line, "Faltan argumentos en el exponente.");
-                        Interprete.existenErrores = true;
                     }
                     break;
                 case 19:
@@ -280,7 +278,6 @@ public class Scanner {
                         lexema += c;
                     }else{
                         Interprete.error(cont_line, "Faltan argumentos en el exponente.");
-                        Interprete.existenErrores = true;
                     }
                     break;
                 case 20:
@@ -314,7 +311,6 @@ public class Scanner {
 
                     }else if(c == '\n'){
                         Interprete.error(cont_line, "un string no puede contener saltos de linea.");
-                        Interprete.existenErrores = true;
                     }
 
                     break;
@@ -345,7 +341,6 @@ public class Scanner {
                         estado = 27;
                     }else if(i == source.length()-1){
                         Interprete.error(cont_line, "Comentario multilinea no cerrado.");
-                        Interprete.existenErrores = true;
                     }else{
                         lexema += c;
                         estado = 27;
@@ -361,7 +356,6 @@ public class Scanner {
                         estado = 27;
                     }else if(i == source.length()-1){
                         Interprete.error(cont_line, "Comentario multilinea no cerrado.");
-                        Interprete.existenErrores = true;
                     }else{
                         lexema += c;
                         estado = 27;
