@@ -36,6 +36,7 @@ public class Scanner {
         int estado = 0;
         int cont_line = 0;
         String lexema = "";
+        String lexema2 = "";
         char c;
 
         for(int i=0; i<source.length(); i++){
@@ -64,7 +65,14 @@ public class Scanner {
                     }else if(c == '!') {
                         estado = 10;
                         lexema += c;
+                    }else if(c == '"'){
+                        estado = 24;
+                        lexema += c;
+                    } else if (c == '/') {
+                        estado = 26;
+                        lexema += c;
                     }
+
                     break;
                 case 1:
                     if(c == '=') {
@@ -221,6 +229,94 @@ public class Scanner {
                         i--;
                     }
                     break;
+
+
+                case 24:
+                    if(c == '"'){
+                        lexema += c;
+                        Token t = new Token(TipoToken.STRING, lexema, lexema2);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        lexema2 = "";
+                        i--;
+
+                    }else if(c != '\n'){
+                        lexema += c;
+                        lexema2 += c;
+                        estado = 24;
+
+                    }else if(c == '\n'){
+                        Interprete.error(cont_line, "un string no puede contener saltos de linea.");
+                        Interprete.existenErrores = true;
+                    }
+
+                    break;
+
+                case 26:
+                    if(c == '/'){
+                        lexema += c;
+                        estado = 30;
+                    }else if(c == '*'){
+                        lexema += c;
+                        estado = 27;
+                    }else{
+                        // case 32:
+                        Token t = new Token(TipoToken.SLASH, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+                    break;
+
+                case 27:
+                    if(c == '*'){
+                        lexema += c;
+                        estado = 28;
+                    }else if(c == '\n'){
+                        lexema += c;
+                        estado = 27;
+                    }else if(i == source.length()-1){
+                        Interprete.error(cont_line, "Comentario multilinea no cerrado.");
+                        Interprete.existenErrores = true;
+                    }else{
+                        lexema += c;
+                        estado = 27;
+                    }
+                    break;
+
+                case 28:
+                    if(c == '/'){
+                        lexema += c;
+                        estado = 29;
+                    }else if(c == '\n'){
+                        lexema += c;
+                        estado = 27;
+                    }else if(i == source.length()-1){
+                        Interprete.error(cont_line, "Comentario multilinea no cerrado.");
+                        Interprete.existenErrores = true;
+                    }else{
+                        lexema += c;
+                        estado = 27;
+                    }
+
+                    break;
+                case 29:
+                    estado = 0;
+                    lexema = "";
+                    i--;
+                    break;
+                case 30:
+                    if(c != '\n'){
+                        lexema += c;
+                        estado = 30;
+
+                    }else{
+                        estado = 0;
+                        lexema = "";
+                    }
+
             }
 
 
