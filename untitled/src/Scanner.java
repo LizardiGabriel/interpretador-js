@@ -46,14 +46,7 @@ public class Scanner {
             }
             switch (estado){
                 case 0:
-                    if(Character.isLetter(c)){
-                        estado = 13;
-                        lexema += c;
-                    }
-                    else if(Character.isDigit(c)){
-                        estado = 15;
-                        lexema += c;
-                    }else if(c == '>') {
+                    if(c == '>') {
                         estado = 1;
                         lexema += c;
                     }else if(c == '<') {
@@ -68,7 +61,7 @@ public class Scanner {
                     }else if(c == '"'){
                         estado = 24;
                         lexema += c;
-                    } else if (c == '/') {
+                    }else if (c == '/') {
                         estado = 26;
                         lexema += c;
                     } else if (c == '(') {
@@ -76,67 +69,63 @@ public class Scanner {
                         Token t = new Token(TipoToken.LEFT_PAREN, lexema);
                         tokens.add(t);
                         lexema = "";
-                        estado = 0;
                     } else if (c == ')') {
                         lexema += c;
                         Token t = new Token(TipoToken.RIGHT_PAREN, lexema);
                         tokens.add(t);
                         lexema = "";
-                        estado = 0;
                     } else if (c == '{') {
                         lexema += c;
                         Token t = new Token(TipoToken.LEFT_BRACE, lexema);
                         tokens.add(t);
                         lexema = "";
-                        estado = 0;
                     } else if (c == '}') {
                         lexema += c;
                         Token t = new Token(TipoToken.RIGHT_BRACE, lexema);
                         tokens.add(t);
                         lexema = "";
-                        estado = 0;
                     } else if (c == ',') {
                         lexema += c;
                         Token t = new Token(TipoToken.COMMA, lexema);
                         tokens.add(t);
                         lexema = "";
-                        estado = 0;
                     } else if (c == '.') {
                         lexema += c;
                         Token t = new Token(TipoToken.DOT, lexema);
                         tokens.add(t);
                         lexema = "";
-                        estado = 0;
                     } else if (c == '-') {
                         lexema += c;
                         Token t = new Token(TipoToken.MINUS, lexema);
                         tokens.add(t);
                         lexema = "";
-                        estado = 0;
                     } else if (c == '+') {
                         lexema += c;
                         Token t = new Token(TipoToken.PLUS, lexema);
                         tokens.add(t);
                         lexema = "";
-                        estado = 0;
-                    } else if (c == ';') {
+                    } else if (Character.compare(c,'\u003B') == 0) {
                         lexema += c;
                         Token t = new Token(TipoToken.SEMICOLON, lexema);
                         tokens.add(t);
                         lexema = "";
-                        estado = 0;
                     } else if (c == '*') {
                         lexema += c;
                         Token t = new Token(TipoToken.STAR, lexema);
                         tokens.add(t);
                         lexema = "";
-                        estado = 0;
                     } else if (i == source.length()-1) {
                         lexema += c;
                         Token t = new Token(TipoToken.EOF, lexema);
                         tokens.add(t);
                         lexema = "";
-                        estado = 0;
+                    } else if(Character.isLetter(c)){
+                        estado = 13;
+                        lexema += c;
+                    }
+                    else if(Character.isDigit(c)){
+                        estado = 15;
+                        lexema += c;
                     }
 
                     break;
@@ -302,14 +291,12 @@ public class Scanner {
                         estado = 0;
                         lexema = "";
                         lexema2 = "";
-                        i--;
-
                     }else if(c != '\n'){
                         lexema += c;
                         lexema2 += c;
                         estado = 24;
 
-                    }else if(c == '\n'){
+                    }else{
                         Interprete.error(cont_line, "un string no puede contener saltos de linea.");
                     }
 
@@ -368,10 +355,8 @@ public class Scanner {
                     i--;
                     break;
                 case 30:
-                    if(c != '\n'){
+                    if(c != '\n' && i != source.length() - 1){
                         lexema += c;
-                        estado = 30;
-
                     }else{
                         estado = 0;
                         lexema = "";
