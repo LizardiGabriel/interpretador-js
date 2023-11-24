@@ -30,8 +30,8 @@ public class ASDR implements Parser{
     private void Q(){
         match(TipoToken.SELECT);
         D();
-        //match(TipoToken.FROM);
-        //T();
+        match(TipoToken.FROM);
+        T();
     }
 
     // D -> distinct P | P
@@ -79,6 +79,17 @@ public class ASDR implements Parser{
         A1();
     }
 
+    // A1 -> ,A | E
+    private void A1(){
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.COMA){
+            match(TipoToken.COMA);
+            A();
+        }
+    }
+
     // A2 -> id A3
     private void A2(){
         if(hayErrores)
@@ -94,18 +105,8 @@ public class ASDR implements Parser{
         }
     }
 
-    // A1 -> ,A | Ɛ
-    private void A1(){
-        if(hayErrores)
-            return;
 
-        if(preanalisis.tipo == TipoToken.COMA){
-            match(TipoToken.COMA);
-            A();
-        }
-    }
-
-    // A3 -> . id | Ɛ
+    // A3 -> . id | E
     private void A3(){
         if(hayErrores)
             return;
@@ -115,6 +116,51 @@ public class ASDR implements Parser{
             match(TipoToken.IDENTIFICADOR);
         }
     }
+
+
+    private void T() {
+    if (hayErrores)
+        return;
+        T2();
+        T1();
+    }
+
+    private void T1() {
+        if (hayErrores)
+            return;
+
+        if (preanalisis.tipo == TipoToken.COMA) {
+            match(TipoToken.COMA);
+            T();
+        }
+    }
+
+    private void T2() {
+        if (hayErrores)
+            return;
+
+        if (preanalisis.tipo == TipoToken.IDENTIFICADOR) {
+            match(TipoToken.IDENTIFICADOR);
+            T3();
+        } else {
+            hayErrores = true;
+            System.out.println("Se esperaba un 'identificador'");
+        }
+    }
+
+    private void T3() {
+        if (hayErrores)
+            return;
+
+        if (preanalisis.tipo == TipoToken.IDENTIFICADOR) {
+            match(TipoToken.IDENTIFICADOR);
+        }
+    }
+
+
+
+
+
 
 
     private void match(TipoToken tt){
