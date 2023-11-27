@@ -305,7 +305,7 @@ public class ASDR implements Parser {
             match(TipoToken.RIGHT_PAREN);
         } else {
             hayErrores = true;
-            System.out.println("Se esperaba un literal, identificador o expresión entre paréntesis");
+            System.out.println("Se esperaba un literal, identificador o expresion entre parentesis");
         }
     }
 
