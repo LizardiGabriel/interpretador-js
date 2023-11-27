@@ -48,10 +48,13 @@ public class Interprete {
         try{
             Scanner scanner = new Scanner(source);
             List<Token> tokens = scanner.scan();
-            if(!existenErrores)
+            /*if(!existenErrores)
                 for(Token token : tokens){
                     System.out.println(token);
                 }
+            */
+            Parser parser = new ASDR(tokens);
+            parser.parse();
         }
         catch (Exception ex){
             ex.printStackTrace();
@@ -59,11 +62,7 @@ public class Interprete {
 
     }
 
-    /*
-    El método error se puede usar desde las distintas clases
-    para reportar los errores:
-    Interprete.error(....);
-     */
+    // Reportar errores
     static void error(int linea, String mensaje){
         reportar(linea, "", mensaje);
     }
