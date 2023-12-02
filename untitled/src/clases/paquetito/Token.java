@@ -1,3 +1,5 @@
+package paquetito;
+
 public class Token {
 
     final TipoToken tipo;

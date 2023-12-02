@@ -1,6 +1,8 @@
+package paquetito;
+
 import java.util.List;
 
-public class ASDR implements Parser {
+public class ASDR implements Parser0 {
 
     private int i = 0;
     private boolean hayErrores = false;

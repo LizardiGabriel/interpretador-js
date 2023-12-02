@@ -1,3 +1,5 @@
+package paquetito;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -53,7 +55,7 @@ public class Interprete {
                     System.out.println(token);
                 }
             */
-            Parser parser = new ASDR(tokens);
+            Parser0 parser = new ASDR(tokens);
             parser.parse();
         }
         catch (Exception ex){
