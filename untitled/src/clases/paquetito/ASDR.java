@@ -306,6 +306,343 @@ public class ASDR implements Parser {
         return value;
     }
 
+    /**
+     * Analiza una asignación opcional en el código fuente.
+     *
+     * @return Una expresión o null.
+     */
+    private Expression assignmentOptional() {
+        if (preanalisis.tipo == TipoToken.EQUAL) {
+            match(TipoToken.EQUAL);
+            return expression();
+        }
+        return null;
+    }
+
+    /**
+     * Analiza una expresión lógica en el código fuente.
+     *
+     * @return Una expresión lógica (Expression,
+     *         Token, Expression) o o una expresión de igualdad. (Expression)
+     */
+    private Expression logicOr() {
+        Expression result = logicAnd();
+        Expression or2Result = logicOr2(result);
+        return or2Result;
+    }
+
+    // checar la recursion ?
+    private Expression logicOr2(Expression expr) {
+        if (preanalisis.getTipo() == TipoToken.OR) {
+            match(TipoToken.OR);
+            Token operator = previous();
+
+            Expression logAnd = logicAnd();
+
+            ExprLogical exprLog = new ExprLogical(expr, operator, logAnd);
+
+            return logicOr2(exprLog);
+
+        }
+        return null;
+    }
+
+    // checar la recursion ?
+    private Expression logicAnd() {
+        Expression result = equality();
+        Expression and2Result = logicAnd2(result);
+        return and2Result;
+    }
+
+    private Expression logicAnd2(Expression expr) {
+        if (preanalisis.getTipo() == TipoToken.AND) {
+            match(TipoToken.AND);
+            Token operator = previous();
+
+            Expression equality = equality();
+            ExprLogical exprLog = new ExprLogical(expr, operator, equality);
+
+            return logicAnd2(exprLog);
+        }
+        return null;
+    }
+
+
+    // checar la recursion ?
+    private Expression equality() {
+        Expression result = comparison();
+        Expression res = equality2(result);
+        return res;
+    }
+
+    private Expression equality2(Expression left) {
+        switch (preanalisis.getTipo()) {
+            case BANG_EQUAL:
+                match(TipoToken.BANG_EQUAL);
+                Token operator = previous();
+                Expression right = comparison();
+                ExprBinary expb = new ExprBinary(left, operator, right);
+                return equality2(expb);
+            case EQUAL_EQUAL:
+                match(TipoToken.EQUAL_EQUAL);
+                operator = previous();
+                right = comparison();
+                expb = new ExprBinary(left, operator, right);
+                return equality2(expb);
+
+        }
+
+        return null;
+    }
+
+    // checar la recursion ?
+
+    private Expression comparison() {
+        Expression result = term();
+        Expression res = comparision2(result);
+        return res;
+    }
+
+    private Expression comparision2(Expression left) {
+        switch (preanalisis.getTipo()) {
+            case GREATER:
+                match(TipoToken.GREATER);
+                Token operator = previous();
+                Expression right = term();
+                ExprBinary expb = new ExprBinary(left, operator, right);
+                return comparision2(expb);
+            case GREATER_EQUAL:
+                match(TipoToken.GREATER_EQUAL);
+                operator = previous();
+                right = term();
+                expb = new ExprBinary(left, operator, right);
+                return comparision2(expb);
+            case LESS:
+                match(TipoToken.LESS);
+                operator = previous();
+                right = term();
+                expb = new ExprBinary(left, operator, right);
+                return comparision2(expb);
+            case LESS_EQUAL:
+                match(TipoToken.LESS_EQUAL);
+                operator = previous();
+                right = term();
+                expb = new ExprBinary(left, operator, right);
+                return comparision2(expb);
+        }
+        return null;
+    }
+
+    /// checar recursividad ?
+
+    private Expression term() {
+        Expression result = factor();
+        Expression res = term2(result);
+        return res;
+    }
+
+    private Expression term2(Expression left) {
+        switch (preanalisis.getTipo()) {
+            case MINUS:
+                match(TipoToken.MINUS);
+                Token operator = previous();
+                Expression right = factor();
+                ExprBinary expb = new ExprBinary(left, operator, right);
+                return term2(expb);
+            case PLUS:
+                match(TipoToken.PLUS);
+                operator = previous();
+                right = factor();
+                expb = new ExprBinary(left, operator, right);
+                return term2(expb);
+        }
+
+        return null;
+    }
+
+    /// checar recursividad ?
+
+    private Expression factor() {
+        Expression expr = unary();
+        expr = factor2(expr);
+        return expr;
+    }
+
+    private Expression factor2(Expression expr) {
+        switch (preanalisis.getTipo()) {
+            case SLASH:
+                match(TipoToken.SLASH);
+                Token operador = previous();
+                Expression expr2 = unary();
+                ExprBinary expb = new ExprBinary(expr, operador, expr2);
+                return factor2(expb);
+            case STAR:
+                match(TipoToken.STAR);
+                operador = previous();
+                expr2 = unary();
+                expb = new ExprBinary(expr, operador, expr2);
+                return factor2(expb);
+        }
+        return null;
+    }
+
+    private Expression unary() {
+        switch (preanalisis.getTipo()) {
+            case BANG:
+                match(TipoToken.BANG);
+                Token operador = previous();
+                Expression expr = unary();
+                return new ExprUnary(operador, expr);
+            case MINUS:
+                match(TipoToken.MINUS);
+                operador = previous();
+                expr = unary();
+                return new ExprUnary(operador, expr);
+            default:
+                return call();
+        }
+    }
+
+    private Expression call() {
+        Expression expr = primary();
+        Expression call2Result = call2(expr);
+        return call2Result;
+    }
+
+    private Expression call2(Expression expr) {
+        switch (preanalisis.getTipo()) {
+            case LEFT_PAREN:
+                match(TipoToken.LEFT_PAREN);
+                List<Expression> lstArguments = argumentsOptional();
+                match(TipoToken.RIGHT_PAREN);
+                ExprCallFunction ecf = new ExprCallFunction(expr, lstArguments);
+                return call2(ecf);
+        }
+        return null;
+    }
+
+    // en expressionLiteral se necesita un valor
+
+    private Expression primary() {
+        switch (preanalisis.getTipo()) {
+            case TRUE:
+                match(TipoToken.TRUE);
+                return new ExprLiteral(true);
+            case FALSE:
+                match(TipoToken.FALSE);
+                return new ExprLiteral(false);
+            case NULL:
+                match(TipoToken.NULL);
+                return new ExprLiteral(null);
+            case NUMBER:
+                match(TipoToken.NUMBER);
+                Token numero = previous();
+                return new ExprLiteral(numero.getLiteral());
+            case STRING:
+                match(TipoToken.STRING);
+                Token cadena = previous();
+                return new ExprLiteral(cadena.getLiteral());
+            case IDENTIFIER:
+                match(TipoToken.IDENTIFIER);
+                Token id = previous();
+                return new ExprVariable(id);
+            case LEFT_PAREN:
+                match(TipoToken.LEFT_PAREN);
+                Expression expr = expression();
+                match(TipoToken.RIGHT_PAREN);
+                return new ExprGrouping(expr);
+        }
+        return null;
+    }
+
+    private Statement function() {
+        Token name = match(TipoToken.IDENTIFIER);
+        match(TipoToken.LEFT_PAREN);
+        List<Token> parameters = parametersOptional();
+        match(TipoToken.RIGHT_PAREN);
+        StmtBlock body = block();
+        return new StmtFunction(name, parameters, body);
+    }
+
+    // ???
+    // si esta bien functions ? tambien devuelve null
+    private Statement functions() {
+        Statement fun_decl = funDeclaration();
+        Statement funs = functions();
+        return funs;
+
+    }
+
+    private List<Token> parametersOptional() {
+        if (preanalisis.getTipo() != TipoToken.RIGHT_PAREN) {
+            return parameters();
+        }
+        return new ArrayList<>();
+    }
+
+    private List<Token> parameters() {
+        List<Token> parameters = new ArrayList<>();
+        parameters.add(match(TipoToken.IDENTIFIER));
+        parameters.addAll(parameters2());
+        return parameters;
+    }
+
+    // checar recursividad ?
+    private List<Token> parameters2() {
+        List<Token> parameters = new ArrayList<>();
+        while (preanalisis.getTipo() == TipoToken.COMMA) {
+            match(TipoToken.COMMA);
+            parameters.add(match(TipoToken.IDENTIFIER));
+        }
+        return parameters;
+    }
+
+    private List<Expression> argumentsOptional() {
+        if (preanalisis.getTipo() != TipoToken.RIGHT_PAREN) {
+            return arguments();
+        }
+        return new ArrayList<>();
+    }
+
+    private List<Expression> arguments() {
+        List<Expression> arguments = new ArrayList<>();
+        do {
+            arguments.add(expression());
+            match(TipoToken.COMMA);
+        } while (preanalisis.getTipo() == TipoToken.COMMA);
+
+        return arguments;
+
+    }
+
+    private Token match(TipoToken tipo) {
+
+            if (preanalisis.getTipo() == tipo) {
+                Token token = preanalisis;
+                advance();
+                return token;
+            }else{
+                hayErrores = true;
+                System.out.println("Error linea: " + preanalisis.contLine +
+                        " columna: " + preanalisis.contColumn +
+                        ", se esperaba: " + tipo +
+                        ", se encontro: " + preanalisis.getTipo()
+
+                );
+            }
+
+        return null;
+    }
+
+    private void advance() {
+        i++;
+        preanalisis = tokens.get(i);
+    }
+
+    private Token previous() {
+        return this.tokens.get(i - 1);
+    }
+
 
 }
 
