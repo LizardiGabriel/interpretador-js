@@ -4,7 +4,7 @@ package parser;
 public class StmtReturn extends Statement {
     final Expression value;
 
-    StmtReturn(Expression value) {
+    public StmtReturn(Expression value) {
         this.value = value;
     }
 }

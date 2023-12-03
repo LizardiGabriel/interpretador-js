@@ -25,4 +25,9 @@ public class Token {
     public TipoToken getTipo() {
         return tipo;
     }
+
+    public TipoToken getLiteral() {
+        return literal;
+    }
+    
 }
