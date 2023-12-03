@@ -26,7 +26,7 @@ public class Token {
         return tipo;
     }
 
-    public TipoToken getLiteral() {
+    public Object getLiteral() {
         return literal;
     }
     

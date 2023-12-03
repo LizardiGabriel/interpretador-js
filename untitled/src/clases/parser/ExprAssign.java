@@ -3,11 +3,13 @@ import paquetito.Token;
 
 
 public class ExprAssign extends Expression{
-    final Token name;
+    final Token operator;
     final Expression value;
+    final Expression name;
 
-    public ExprAssign(Token name, Expression value) {
+    public ExprAssign(Expression value, Token operator, Expression name) {
         this.name = name;
         this.value = value;
+        this.operator = operator;
     }
 }
