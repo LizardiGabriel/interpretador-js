@@ -1,4 +1,4 @@
-package parser;
+package clases.parser;
 
 
 public class StmtReturn extends Statement {
@@ -6,5 +6,6 @@ public class StmtReturn extends Statement {
 
     public StmtReturn(Expression value) {
         this.value = value;
+        //System.out.println("StmtReturn: " + value);
     }
 }

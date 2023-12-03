@@ -1,5 +1,5 @@
-package parser;
-import paquetito.Token;
+package clases.parser;
+import clases.paquetito.Token;
 
 import java.util.List;
 
@@ -12,5 +12,6 @@ public class StmtFunction extends Statement {
         this.name = name;
         this.params = params;
         this.body = body;
+        //System.out.println("StmtFunction: " + name + " " + params + " " + body);
     }
 }

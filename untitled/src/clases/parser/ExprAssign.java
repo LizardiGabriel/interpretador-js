@@ -1,5 +1,5 @@
-package parser;
-import paquetito.Token;
+package clases.parser;
+import clases.paquetito.Token;
 
 
 public class ExprAssign extends Expression{
@@ -11,5 +11,6 @@ public class ExprAssign extends Expression{
         this.name = name;
         this.value = value;
         this.operator = operator;
+        //System.out.println("ExprAssign: " + operator + " " + name + " " + value);
     }
 }

@@ -1,4 +1,6 @@
-package paquetito;
+package clases.paquetito;
+
+import clases.parser.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,12 +52,14 @@ public class Interprete {
         try{
             Scanner scanner = new Scanner(source);
             List<Token> tokens = scanner.scan();
-            /*if(!existenErrores)
-                for(Token token : tokens){
-                    System.out.println(token);
-                }
-            */
-            
+
+            if(!tokens.isEmpty()) {
+                Parser parser = new ASDR(tokens);
+                parser.parse();
+            }else{
+                System.out.println("No hay tokens");
+                System.out.println(":(((");
+            }
         }
         catch (Exception ex){
             ex.printStackTrace();

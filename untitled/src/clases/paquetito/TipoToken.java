@@ -1,4 +1,4 @@
-package paquetito;
+package clases.paquetito;
 
 public enum TipoToken {
     // Tokens de un sólo caracter

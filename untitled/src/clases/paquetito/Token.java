@@ -1,4 +1,4 @@
-package paquetito;
+package clases.paquetito;
 
 public class Token {
 
@@ -6,17 +6,25 @@ public class Token {
     final String lexema;
     final Object literal;
 
-    public Token(TipoToken tipo, String lexema) {
-        this.tipo = tipo;
+    final int  contLine;
+    final int contColumn;
+
+
+    public Token(TipoToken tipoToken, String lexema, int contLine, int contColumn) {
+        this.tipo = tipoToken;
         this.lexema = lexema;
         this.literal = null;
+        this.contColumn = contColumn;
+        this.contLine = contLine;
     }
-
-    public Token(TipoToken tipo, String lexema, Object literal) {
-        this.tipo = tipo;
+    public Token(TipoToken tipoToken, String lexema, Object literal, int contLine, int contColumn) {
+        this.tipo = tipoToken;
         this.lexema = lexema;
         this.literal = literal;
+        this.contColumn = contColumn;
+        this.contLine = contLine;
     }
+
 
     public String toString() {
         return "<" + tipo + " " + lexema + " " + literal + ">";
@@ -29,5 +37,15 @@ public class Token {
     public Object getLiteral() {
         return literal;
     }
+
+    public int getContLine() {
+        return contLine;
+    }
+
+    public int getContColumn() {
+        return contColumn;
+    }
+
+
     
 }

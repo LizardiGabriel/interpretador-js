@@ -1,9 +1,9 @@
-package parser;
-import paquetito.Token;
+package clases.parser;
+
+import clases.paquetito.TipoToken;
+import clases.paquetito.Token;
 
 import javax.swing.plaf.nimbus.State;
-
-import paquetito.TipoToken;
 
 public class StmtFor extends Statement{
     final Statement initializer;
@@ -16,6 +16,7 @@ public class StmtFor extends Statement{
         this.condition = condition;
         this.increment = increment;
         this.body = body;
+        //System.out.println("StmtFor: " + initializer + " " + condition + " " + increment + " " + body);
     }
 
 

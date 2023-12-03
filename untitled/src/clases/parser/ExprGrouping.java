@@ -1,4 +1,4 @@
-package parser;
+package clases.parser;
 
 
 public class ExprGrouping extends Expression {
@@ -6,5 +6,6 @@ public class ExprGrouping extends Expression {
 
     public ExprGrouping(Expression expression) {
         this.expression = expression;
+        //System.out.println("ExprGrouping: " + expression);
     }
 }

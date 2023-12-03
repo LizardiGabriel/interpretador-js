@@ -1,16 +1,17 @@
-package parser;
-import paquetito.Token;
+package clases.parser;
+import clases.paquetito.Token;
 
 import java.util.List;
 
 public class ExprCallFunction extends Expression{
     final Expression callee;
-    // final Token paren;
     final List<Expression> arguments;
+    // final Token paren;
 
     public ExprCallFunction(Expression callee, /*Token paren,*/ List<Expression> arguments) {
         this.callee = callee;
-        // this.paren = paren;
         this.arguments = arguments;
+        // this.paren = paren;
+        //System.out.println("ExprCallFunction: " + callee + "Arguments: " + arguments);
     }
 }

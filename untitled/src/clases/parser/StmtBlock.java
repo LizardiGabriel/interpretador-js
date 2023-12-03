@@ -1,4 +1,4 @@
-package parser;
+package clases.parser;
 
 
 import javax.swing.plaf.nimbus.State;
@@ -8,6 +8,8 @@ public class StmtBlock extends Statement{
     final List<Statement> statements;
 
     public StmtBlock(List<Statement> statements) {
+
         this.statements = statements;
+        //System.out.println("StmtBlock: " + statements);
     }
 }

@@ -1,5 +1,5 @@
-package parser;
-import paquetito.Token;
+package clases.parser;
+import clases.paquetito.Token;
 
 public class ExprBinary extends Expression{
     final Expression left;
@@ -10,6 +10,7 @@ public class ExprBinary extends Expression{
         this.left = left;
         this.operator = operator;
         this.right = right;
+        //System.out.println("ExprBinary: " + left + " " + operator + " " + right);
     }
 
 }

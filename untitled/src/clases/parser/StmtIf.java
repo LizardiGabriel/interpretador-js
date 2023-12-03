@@ -1,4 +1,4 @@
-package parser;
+package clases.parser;
 
 
 public class StmtIf extends Statement {
@@ -10,5 +10,6 @@ public class StmtIf extends Statement {
         this.condition = condition;
         this.thenBranch = thenBranch;
         this.elseBranch = elseBranch;
+        //System.out.println("StmtIf: " + condition + " " + thenBranch + " " + elseBranch);
     }
 }
