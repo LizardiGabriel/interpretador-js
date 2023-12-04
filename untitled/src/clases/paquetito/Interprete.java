@@ -53,13 +53,17 @@ public class Interprete {
             Scanner scanner = new Scanner(source);
             List<Token> tokens = scanner.scan();
 
-            if(!tokens.isEmpty()) {
-                Parser parser = new ASDR(tokens);
-                parser.parse();
-            }else{
-                System.out.println("No hay tokens");
-                System.out.println(":(((");
+            if(!existenErrores) {
+                if(!tokens.isEmpty()) {
+                    Parser parser = new ASDR(tokens);
+                    parser.parse();
+                }else{
+                    System.out.println("No hay tokens");
+                    System.out.println(":(((");
+                }
             }
+
+
         }
         catch (Exception ex){
             ex.printStackTrace();

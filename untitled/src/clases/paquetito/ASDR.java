@@ -629,6 +629,7 @@ public class ASDR implements Parser {
                         ", se encontro: " + preanalisis.getTipo()
 
                 );
+                advance();
             }
 
         return null;
