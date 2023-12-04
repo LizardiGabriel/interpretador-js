@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="untitled:jar">
-    <output-path>$USER_HOME$/Downloads/compi</output-path>
+    <output-path>$PROJECT_DIR$/run</output-path>
     <root id="archive" name="untitled.jar">
       <element id="module-output" name="untitled" />
     </root>
