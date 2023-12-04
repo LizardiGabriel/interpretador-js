@@ -41,8 +41,8 @@ public class Scanner {
 
     public List<Token> scan() throws Exception {
         int estado = 0;
-        int cont_line = 0;
-        int cont_column = 0;
+        int cont_line = 1;
+        int cont_column = 1;
         String lexema = "";
         String lexema2 = "";
         char c;
