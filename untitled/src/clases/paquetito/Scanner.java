@@ -135,6 +135,7 @@ public class Scanner {
                     } else {
                         addToken(new Token(TipoToken.GREATER, lexema, cont_line, cont_column));
                         i--;
+                        cont_column--;
                     }
                     estado = 0;
                     lexema = "";
@@ -146,6 +147,7 @@ public class Scanner {
                     } else {
                         addToken(new Token(TipoToken.LESS, lexema, cont_line, cont_column));
                         i--;
+                        cont_column--;
                     }
                     estado = 0;
                     lexema = "";
@@ -157,6 +159,7 @@ public class Scanner {
                     } else {
                         addToken(new Token(TipoToken.EQUAL, lexema, cont_line, cont_column));
                         i--;
+                        cont_column--;
                     }
                     estado = 0;
                     lexema = "";
@@ -168,6 +171,7 @@ public class Scanner {
                     } else {
                         addToken(new Token(TipoToken.BANG, lexema, cont_line, cont_column));
                         i--;
+                        cont_column--;
                     }
                     estado = 0;
                     lexema = "";
@@ -188,6 +192,7 @@ public class Scanner {
                         estado = 0;
                         lexema = "";
                         i--;
+                        cont_column--;
 
                     }
                     break;
@@ -206,6 +211,7 @@ public class Scanner {
                         estado = 0;
                         lexema = "";
                         i--;
+                        cont_column--;
                     }
                     break;
                 case 16:
@@ -228,6 +234,7 @@ public class Scanner {
                         estado = 0;
                         lexema = "";
                         i--;
+                        cont_column--;
                     }
                     break;
                 case 18:
@@ -258,6 +265,7 @@ public class Scanner {
                         estado = 0;
                         lexema = "";
                         i--;
+                        cont_column--;
                     }
                     break;
                 case 24:
@@ -292,6 +300,7 @@ public class Scanner {
                         estado = 0;
                         lexema = "";
                         i--;
+                        cont_column--;
                     }
                     break;
                 case 27:
@@ -326,6 +335,7 @@ public class Scanner {
                     estado = 0;
                     lexema = "";
                     i--;
+                    cont_column--;
                     break;
                 case 30:
                     if (c != '\n' && i != source.length() - 1) {
