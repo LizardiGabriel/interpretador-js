@@ -629,7 +629,14 @@ public class ASDR implements Parser {
                         ", se encontro: " + preanalisis.getTipo()
 
                 );
-                advance();
+                try{
+                    advance();
+                }catch (IndexOutOfBoundsException e){
+                    System.out.println("Se llego al final del archivo, " + e.getMessage() );
+                    System.exit(0);
+
+                }
+                
             }
 
         return null;
