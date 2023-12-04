@@ -563,15 +563,7 @@ public class ASDR implements Parser {
         StmtBlock body = block();
         return new StmtFunction(name, parameters, body);
     }
-
-    // ???
-    // si esta bien functions ? tambien devuelve null
-    private Statement functions() {
-        Statement fun_decl = funDeclaration();
-        Statement funs = functions();
-        return funs;
-
-    }
+    
 
     private List<Token> parametersOptional() {
         if (preanalisis.getTipo() != TipoToken.RIGHT_PAREN) {
@@ -587,7 +579,7 @@ public class ASDR implements Parser {
         return parameters;
     }
 
-    // checar recursividad ?
+    // checar recursividad
     private List<Token> parameters2() {
         List<Token> parameters = new ArrayList<>();
         while (preanalisis.getTipo() == TipoToken.COMMA) {
