@@ -11,4 +11,9 @@ public class StmtVar extends Statement {
         this.initializer = initializer;
         //System.out.println("StmtVar: " + name + " " + initializer);
     }
+
+    @Override
+    public String toString() {
+        return "\n--> StmtVar: " + name.getLexema() + " = " + (initializer != null ? initializer.toString() : "null");
+    }
 }

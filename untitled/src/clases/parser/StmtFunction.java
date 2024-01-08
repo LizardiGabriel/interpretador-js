@@ -12,6 +12,18 @@ public class StmtFunction extends Statement {
         this.name = name;
         this.params = params;
         this.body = body;
-        //System.out.println("StmtFunction: " + name + " " + params + " " + body);
+
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n--> StmtFunction: ").append(name.getLexema()).append(" ");
+        for (Token param : params) {
+            sb.append("Param: ").append(param.getLexema()).append(", ");
+        }
+        sb.append("Body: ").append(body.toString());
+
+        return sb.toString();
     }
 }

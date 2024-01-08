@@ -9,4 +9,8 @@ public class StmtExpression extends Statement {
         this.expression = expression;
         //System.out.println("StmtExpression: " + expression);
     }
+    @Override
+    public String toString() {
+        return "\n--> StmtExpression: " + expression.toString();
+    }
 }

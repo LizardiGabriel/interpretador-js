@@ -1,0 +1,6 @@
+// Prueba 2:
+if(a < b){
+    print "Valido";
+}
+
+print "Fin";

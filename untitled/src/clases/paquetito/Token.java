@@ -46,6 +46,8 @@ public class Token {
         return contColumn;
     }
 
-
+    public String getLexema() {
+        return lexema;
+    }
     
 }

@@ -1,9 +1,0 @@
-// Prueba 9:
-fun factorial(n){
-    if(n <= 1){
-        return 1;
-    }
-    else{
-        return (n*3)/(8+4) + 8-3;
-    }
-}

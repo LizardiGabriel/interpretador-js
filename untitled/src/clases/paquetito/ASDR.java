@@ -12,6 +12,7 @@ public class ASDR implements Parser {
     private int i = 0;
     private Token preanalisis;
     private final List<Token> tokens;
+    private final TablaSimbolos tablita = new TablaSimbolos();
 
     public ASDR(List<Token> tokens) {
         this.tokens = tokens;
@@ -39,20 +40,27 @@ public class ASDR implements Parser {
 
         List<Statement> declarations = new ArrayList<>();
         while (preanalisis.getTipo() != TipoToken.EOF) {
-            declarations.add(declaration());
+            Statement stmt = declaration();
+            System.out.println(stmt.toString());
+
+            declarations.add(stmt);
         }
         return declarations;
     }
 
     // checar epsilon
     private Statement declaration() {
+        Statement devolver;
         switch (preanalisis.getTipo()) {
             case FUN:
-                return funDeclaration();
+                devolver = funDeclaration();
+                return devolver;
             case VAR:
-                return varDeclaration();
+                devolver = varDeclaration();
+                return devolver;
             default:
-                return statement();
+                devolver = statement();
+                return devolver;
         }
     }
 
@@ -83,6 +91,8 @@ public class ASDR implements Parser {
 
         match(TipoToken.SEMICOLON);
 
+        tablita.asignar(variableName.getLexema(), initializer);
+
         return new StmtVar(variableName, initializer);
     }
 
@@ -105,7 +115,7 @@ public class ASDR implements Parser {
     private Statement statement() {
         switch (preanalisis.getTipo()) {
             case FOR:
-                return forStatement();
+                return forStmtBlock();
             case IF:
                 return ifStatement();
             case PRINT:
@@ -137,24 +147,49 @@ public class ASDR implements Parser {
 
     /**
      * Analiza una declaración de bucle 'for' en el código fuente.
-     * Verifica 'FOR', '(', FOR_STMT_1, FOR_STMT_2, ';', FOR_STMT_3, ')'
+     * Verifica 'FOR', '(', FOR_STMT_1, FOR_EXPR_2, ';', FOR_STMT_3, ')'
      * y el cuerpo.
      *
-     * @return Nueva declaración de bucle.
+     * @return UN OBJETO StmtBlock
      */
-    private Statement forStatement() {
+    private StmtBlock forStmtBlock() {
+
+        // stmtBlock -> (init, stmtloop), stmtloop -> (condition, stmtBlock), stmtBlock -> (body, increment)
+
         match(TipoToken.FOR);
         match(TipoToken.LEFT_PAREN);
 
         Statement forStmt1 = parseForStmt1();
-        Expression forStmt2 = forStmt2();
+        Expression forExpr2 = forExpr2();
         match(TipoToken.SEMICOLON);
-        Expression forStmt3 = forStmt3();
+        Statement forStmt3 = forStmt3();
 
         match(TipoToken.RIGHT_PAREN);
 
         Statement body = statement();
-        return new StmtFor(forStmt1, forStmt2, forStmt3, body);
+
+
+        List <Statement> lstStmt = new ArrayList<>();
+
+        if (forStmt3 != null) {
+            lstStmt.add(forStmt3);
+            lstStmt.add(body);
+
+        } else {
+            lstStmt.add(body);
+        }
+
+        StmtBlock bodyIncrement = new StmtBlock(lstStmt);
+        StmtLoop stmtLoop = new StmtLoop(forExpr2, bodyIncrement);
+
+        List <Statement> lstStmt2 = new ArrayList<>();
+        lstStmt2.add(forStmt1);
+        lstStmt2.add(stmtLoop);
+
+        StmtBlock stmtBlock = new StmtBlock(lstStmt2);
+
+        return stmtBlock;
+
     }
 
     private Statement parseForStmt1() {
@@ -165,16 +200,18 @@ public class ASDR implements Parser {
         }
     }
 
-    private Expression forStmt2() {
+    private Expression forExpr2() {
         return expression();
     }
 
-    private Expression forStmt3() {
+    private Statement forStmt3() {
         if (preanalisis.getTipo() != TipoToken.RIGHT_PAREN) {
-
-            return expression();
+            Expression expr = expression();
+            return new StmtExpression(expr);
+        } else {
+            return null;
         }
-        return null;
+
     }
 
     /**
@@ -231,6 +268,7 @@ public class ASDR implements Parser {
         match(TipoToken.RETURN);
         Expression value = returnExpOptional();
         match(TipoToken.SEMICOLON);
+
         return new StmtReturn(value);
     }
 
@@ -294,16 +332,14 @@ public class ASDR implements Parser {
      *         Token, Expression)
      */
     private Expression assignment() {
-        // El valor a asignar
-        Expression value = logicOr();
-        // La expresión a la que se está asignando
-        Expression name = assignmentOptional();
-        if (name != null) {
-            // El operador de asignación
-            Token operator = previous();
-            return new ExprAssign(value, operator, name);
+        Expression name = logicOr();
+        if (preanalisis.tipo == TipoToken.EQUAL) {
+            Token operator = preanalisis;
+            advance();
+            Expression value = expression();
+            return new ExprAssign(name, operator, value);
         }
-        return value;
+        return name;
     }
 
     /**
@@ -313,6 +349,7 @@ public class ASDR implements Parser {
      */
     private Expression assignmentOptional() {
         if (preanalisis.tipo == TipoToken.EQUAL) {
+            //System.out.println("pipi___ soytipoequal");
             match(TipoToken.EQUAL);
             return expression();
         }
@@ -326,6 +363,7 @@ public class ASDR implements Parser {
      *         Token, Expression) o o una expresión de igualdad. (Expression)
      */
     private Expression logicOr() {
+        //System.out.println("estoy en logicOr");
         Expression result = logicAnd();
         Expression or2Result = logicOr2(result);
         return or2Result;
@@ -343,12 +381,15 @@ public class ASDR implements Parser {
 
             return logicOr2(exprLog);
 
+        }else {
+            return expr;
         }
-        return null;
+
     }
 
     // checar la recursion ?
     private Expression logicAnd() {
+        //System.out.println("estoy en logicAnd");
         Expression result = equality();
         Expression and2Result = logicAnd2(result);
         return and2Result;
@@ -363,13 +404,17 @@ public class ASDR implements Parser {
             ExprLogical exprLog = new ExprLogical(expr, operator, equality);
 
             return logicAnd2(exprLog);
+        }else {
+            return expr;
         }
-        return null;
+
+
     }
 
 
     // checar la recursion ?
     private Expression equality() {
+        //System.out.println("estoy en equality");
         Expression result = comparison();
         Expression res = equality2(result);
         return res;
@@ -390,14 +435,18 @@ public class ASDR implements Parser {
                 expb = new ExprBinary(left, operator, right);
                 return equality2(expb);
 
+            default:
+                return left;
+
         }
 
-        return null;
+
     }
 
     // checar la recursion ?
 
     private Expression comparison() {
+        //System.out.println("estoy en comparison");
         Expression result = term();
         Expression res = comparision2(result);
         return res;
@@ -429,35 +478,49 @@ public class ASDR implements Parser {
                 right = term();
                 expb = new ExprBinary(left, operator, right);
                 return comparision2(expb);
+            default:
+                return left;
         }
-        return null;
+
     }
 
     /// checar recursividad ?
 
     private Expression term() {
+        //System.out.println("estoy en term");
         Expression result = factor();
         Expression res = term2(result);
+        //System.out.println("retorno res: " + String.valueOf(res));
         return res;
     }
 
     private Expression term2(Expression left) {
+        //System.out.println("estoy en term2, left es: " + String.valueOf(left));
         switch (preanalisis.getTipo()) {
             case MINUS:
+                //System.out.println("estoy en menos");
                 match(TipoToken.MINUS);
+
                 Token operator = previous();
                 Expression right = factor();
                 ExprBinary expb = new ExprBinary(left, operator, right);
                 return term2(expb);
             case PLUS:
+                //System.out.println("estoy en mas");
                 match(TipoToken.PLUS);
                 operator = previous();
                 right = factor();
-                expb = new ExprBinary(left, operator, right);
-                return term2(expb);
+
+                ExprBinary expb2 = new ExprBinary(left, operator, right);
+
+                //System.out.println("lleagando a term2 en mas: " + String.valueOf(expb2));
+                return term2(expb2);
+            default:
+                //System.out.println("estoy en default");
+                return left;
         }
 
-        return null;
+
     }
 
     /// checar recursividad ?
@@ -482,8 +545,10 @@ public class ASDR implements Parser {
                 expr2 = unary();
                 expb = new ExprBinary(expr, operador, expr2);
                 return factor2(expb);
+            default:
+                return expr;
         }
-        return null;
+
     }
 
     private Expression unary() {
@@ -517,8 +582,11 @@ public class ASDR implements Parser {
                 match(TipoToken.RIGHT_PAREN);
                 ExprCallFunction ecf = new ExprCallFunction(expr, lstArguments);
                 return call2(ecf);
+
+            default:
+                return expr;
         }
-        return null;
+
     }
 
     // en expressionLiteral se necesita un valor
@@ -561,7 +629,10 @@ public class ASDR implements Parser {
         List<Token> parameters = parametersOptional();
         match(TipoToken.RIGHT_PAREN);
         StmtBlock body = block();
-        return new StmtFunction(name, parameters, body);
+
+        StmtFunction retornar = new StmtFunction(name, parameters, body);
+        //System.out.println(retornar.toString());
+        return retornar;
     }
     
 
@@ -597,15 +668,23 @@ public class ASDR implements Parser {
     }
 
     private List<Expression> arguments() {
-        List<Expression> arguments = new ArrayList<>();
-        do {
+    List<Expression> arguments = new ArrayList<>();
+    arguments.add(expression());
+    while (preanalisis.getTipo() == TipoToken.COMMA) {
+        match(TipoToken.COMMA);
+        if (preanalisis.getTipo() == TipoToken.RIGHT_PAREN) {
+            System.out.println("Error linea: " + preanalisis.contLine +
+                    " columna: " + preanalisis.contColumn +
+                    ", se esperaba: EXPRESSION" +
+                    ", se encontro: " + preanalisis.getTipo()
+            );
+            hayErrores = true;
+        } else {
             arguments.add(expression());
-            match(TipoToken.COMMA);
-        } while (preanalisis.getTipo() == TipoToken.COMMA);
-
-        return arguments;
-
+        }
     }
+    return arguments;
+}
 
     private Token match(TipoToken tipo) {
 
@@ -642,6 +721,7 @@ public class ASDR implements Parser {
     private Token previous() {
         return this.tokens.get(i - 1);
     }
+
 
 
 }

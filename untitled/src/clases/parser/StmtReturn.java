@@ -6,6 +6,11 @@ public class StmtReturn extends Statement {
 
     public StmtReturn(Expression value) {
         this.value = value;
-        //System.out.println("StmtReturn: " + value);
+        //System.out.println("cons-StmtReturn: " + value);
+
+    }
+    @Override
+    public String toString() {
+        return "\n--> StmtReturn: " + String.valueOf(value);
     }
 }

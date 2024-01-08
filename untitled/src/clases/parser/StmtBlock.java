@@ -10,6 +10,23 @@ public class StmtBlock extends Statement{
     public StmtBlock(List<Statement> statements) {
 
         this.statements = statements;
-        //System.out.println("StmtBlock: " + statements);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n--> StmtBlock: {");
+        for (Statement stmt : statements) {
+            if (stmt != null) {
+                sb.append(stmt.toString()).append(" ");
+            }else {
+                sb.append("null ");
+            }
+
+        }
+        sb.append("}");
+        return sb.toString();
     }
 }
+
+

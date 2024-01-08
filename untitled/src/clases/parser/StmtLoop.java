@@ -10,4 +10,9 @@ public class StmtLoop extends Statement {
         this.body = body;
         //System.out.println("StmtLoop: " + condition + " " + body);
     }
+
+    @Override
+    public String toString() {
+        return "\n--> StmtLoop: [condition: " + String.valueOf(condition) + ", body: " + body.toString() + "]";
+    }
 }

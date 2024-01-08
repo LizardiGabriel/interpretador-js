@@ -12,4 +12,9 @@ public class StmtIf extends Statement {
         this.elseBranch = elseBranch;
         //System.out.println("StmtIf: " + condition + " " + thenBranch + " " + elseBranch);
     }
+
+    @Override
+    public String toString() {
+        return "\n--> StmtIf: {" + String.valueOf(condition) + "\n}\nthen{" + String.valueOf(thenBranch) + "\n}else{" + String.valueOf(elseBranch) + "}<--endStmtIf";
+    }
 }
