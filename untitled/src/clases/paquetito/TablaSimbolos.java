@@ -9,7 +9,19 @@ import java.util.Map;
 * El valor es el valor de la variable.
 * */
 public class TablaSimbolos {
-    private final Map<String, Object> values = new HashMap<>();
+    private final Map<String, Object> values;
+    private final TablaSimbolos principal;
+
+    public TablaSimbolos(){
+        this.principal = null;
+        this.values = new HashMap<>();
+    }
+    public TablaSimbolos(TablaSimbolos principal){
+        this.principal = principal;
+        this.values = new HashMap<>();
+    }
+
+
     /**
      * Verifica si existe un identificador en la tabla de simbolos
      * @param identificador

@@ -34,12 +34,13 @@ public class ExprAssign extends Expression{
     @Override
     public Object resolver(TablaSimbolos tablita){
         if(name instanceof ExprVariable){
-            if(tablita.existeIdentificador(name.resolver(tablita).toString())){
+            ExprVariable var = (ExprVariable) name;
+            if(tablita.existeIdentificador(var.getNombre())){
                 Object valor = value.resolver(tablita);
-                tablita.asignar(name.resolver(tablita).toString() , valor);
+                tablita.asignar(var.getNombre(), valor);
                 return valor;
             }else{
-                throw new RuntimeException("Variable no definida '" + name.resolver(tablita).toString() + "'.");
+                throw new RuntimeException("Variable no definida '" + var.getNombre() + "'.");
             }
         }else{
             throw new RuntimeException("Error en la asignacion de variables");

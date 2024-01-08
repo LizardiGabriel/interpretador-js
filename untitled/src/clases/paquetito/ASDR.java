@@ -25,14 +25,28 @@ public class ASDR implements Parser {
      */
     @Override
     public boolean parse() {
+        List<Statement> declaraciones = programa();
         programa();
 
         if (preanalisis.tipo == TipoToken.EOF && !hayErrores) {
-            System.out.println("Consulta correcta");
+            System.out.println("sintaxis correcta");
+
+            //resolver cada una
+            System.out.println("\n\n\n//////////////////////////////////////////////////////////////");
+            System.out.println("------>ResolverCodigo:");
+
+            for (Statement declaracion : declaraciones) {
+                declaracion.resolver(tablita);
+            }
+            System.out.println("<------Fin Resuelto");
+            System.out.println("//////////////////////////////////////////////////////////////");
+
+
             return true;
         } else {
             System.out.println("Se encontraron errores");
         }
+
         return false;
     }
     
@@ -42,7 +56,6 @@ public class ASDR implements Parser {
         while (preanalisis.getTipo() != TipoToken.EOF) {
             Statement stmt = declaration();
             System.out.println(stmt.toString());
-
             declarations.add(stmt);
         }
         return declarations;

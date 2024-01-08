@@ -11,42 +11,50 @@ public class ExprCallFunction extends Expression{
     final List<Expression> arguments;
     // final Token paren;
 
-    public ExprCallFunction(Expression callee, /*Token paren,*/ List<Expression> arguments) {
+    public ExprCallFunction(Expression callee, List<Expression> arguments) {
         this.callee = callee;
         this.arguments = arguments;
-        // this.paren = paren;
-        //System.out.println("ExprCallFunction: " + callee + "Arguments: " + arguments);
     }
     @Override
     public String toString() {
         return "\n--> ExprCallFunction: " + callee.toString() + "Arguments: " + arguments.toString();
     }
 
-    /**
-     * Resuelve una llamada a función.
-     *
-     * @param tablita
-     * @return El valor de retorno de la función.
-     * @throws RuntimeException si la función no está definida o si el nombre no es una instancia de ExprVariable.
-    * */
     @Override
     public Object resolver(TablaSimbolos tablita) {
+
         if(!(callee instanceof ExprVariable)){
-            throw new RuntimeException("identificador invalido para llamada a funcion");
+            throw new RuntimeException("identificador invalido para llamada a funcion 1");
         }
-        String funcioncita = callee.resolver(tablita).toString();
+        Object aux = callee.resolver(tablita);
+        String funcioncita = null;
+        if(aux instanceof StmtFunction){
+            funcioncita = ((StmtFunction) aux).getName();
+        }else{
+            System.out.println("no es instancia ");
+        }
+
         if(!tablita.existeIdentificador(funcioncita)){
             throw new RuntimeException("funcion no definida '" + funcioncita + "'.");
         }
         Object valor = tablita.obtener(funcioncita);
-        if(!(valor instanceof Function)){
-            throw new RuntimeException("identificador invalido para llamada a funcion");
+        if(!(valor instanceof StmtFunction)){
+            throw new RuntimeException("identificador invalido para llamada a funcion 2");
         }
+
+
         List<Object> argumentitos = new ArrayList<>();
         for(Expression argument : arguments){
-            argumentitos.add(argument.resolver(tablita));
+            argumentitos.add( argument.resolver(tablita));
         }
-        return ((Function) valor).apply(argumentitos);
+        int n = 0;
+        for (Token tokencito : ((StmtFunction) valor).params){
+            tablita.asignar(tokencito.getLexema(), argumentitos.get(n));
+            n++;
+        }
+        Object res =  ((StmtFunction) valor).body.resolver(tablita);
+        return String.valueOf(res);
 
     }
+
 }

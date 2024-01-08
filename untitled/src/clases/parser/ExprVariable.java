@@ -10,6 +10,9 @@ public class ExprVariable extends Expression {
         this.name = name;
         //System.out.println("ExprVariable: " + name);
     }
+    public String getNombre(){
+        return name.getLexema();
+    }
     @Override
     public String toString() {
         return "\n--> ExprVariable: --(" + name.getLexema()+")--";

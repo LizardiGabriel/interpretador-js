@@ -1,6 +1,8 @@
 package clases.parser;
 
 
+import clases.paquetito.TablaSimbolos;
+
 import javax.swing.plaf.nimbus.State;
 import java.util.List;
 
@@ -27,6 +29,25 @@ public class StmtBlock extends Statement{
         sb.append("}");
         return sb.toString();
     }
+
+    @Override
+    public Object resolver(TablaSimbolos tablita) {
+        for (Statement stmt : statements) {
+            if (stmt != null) {
+                stmt.resolver(tablita);
+            }
+            if(stmt instanceof StmtReturn){
+                //System.out.println("yo retorno menso: " + stmt.resolver(tablita).toString());
+                return stmt.resolver(tablita).toString();
+            }
+
+
+        }
+
+        return null;
+    }
+
+
 }
 
 

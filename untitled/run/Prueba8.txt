@@ -10,5 +10,5 @@ while(init <= lim){
     init = init + 1;
 }
 
-print ("cadena1" + fib);
+print ("cadena1: " + fib);
 print "Fin";

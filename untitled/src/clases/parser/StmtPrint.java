@@ -1,5 +1,5 @@
 package clases.parser;
-
+import clases.paquetito.TablaSimbolos;
 
 public class StmtPrint extends Statement {
     final Expression expression;
@@ -13,4 +13,12 @@ public class StmtPrint extends Statement {
     public String toString() {
         return "\n--> StmtPrint: " + expression.toString();
     }
+
+    @Override
+    public Object resolver(TablaSimbolos tablita) {
+        System.out.println(expression.resolver(tablita));
+        return null;
+    }
+
+
 }

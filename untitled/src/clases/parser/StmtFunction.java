@@ -1,4 +1,5 @@
 package clases.parser;
+import clases.paquetito.TablaSimbolos;
 import clases.paquetito.Token;
 
 import java.util.List;
@@ -23,7 +24,20 @@ public class StmtFunction extends Statement {
             sb.append("Param: ").append(param.getLexema()).append(", ");
         }
         sb.append("Body: ").append(body.toString());
-
         return sb.toString();
+        //return name.getLexema();
     }
+    public String getName(){
+        return name.getLexema();
+    }
+
+    @Override
+    public Object resolver(TablaSimbolos tablita) {
+        tablita.asignar(name.getLexema(), this);
+        return null;
+    }
+
+
+
+
 }

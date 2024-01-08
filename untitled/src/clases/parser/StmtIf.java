@@ -1,6 +1,8 @@
 package clases.parser;
 
 
+import clases.paquetito.TablaSimbolos;
+
 public class StmtIf extends Statement {
     final Expression condition;
     final Statement thenBranch;
@@ -17,4 +19,17 @@ public class StmtIf extends Statement {
     public String toString() {
         return "\n--> StmtIf: {" + String.valueOf(condition) + "\n}\nthen{" + String.valueOf(thenBranch) + "\n}else{" + String.valueOf(elseBranch) + "}<--endStmtIf";
     }
+
+    @Override
+    public Object resolver(TablaSimbolos tablita) {
+        if ((boolean)condition.resolver(tablita)) {
+            return thenBranch.resolver(tablita);
+        } else {
+            return elseBranch != null ? elseBranch.resolver(tablita) : null;
+        }
+    }
+
+
+
+
 }

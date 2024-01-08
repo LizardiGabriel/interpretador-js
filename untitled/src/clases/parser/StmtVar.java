@@ -1,4 +1,5 @@
 package clases.parser;
+import clases.paquetito.TablaSimbolos;
 import clases.paquetito.Token;
 
 
@@ -15,5 +16,12 @@ public class StmtVar extends Statement {
     @Override
     public String toString() {
         return "\n--> StmtVar: " + name.getLexema() + " = " + (initializer != null ? initializer.toString() : "null");
+    }
+
+    @Override
+    public Object resolver(TablaSimbolos tablita) {
+        Object value = initializer != null ? initializer.resolver(tablita) : null;
+        tablita.asignar(name.getLexema(), value);
+        return value;
     }
 }
