@@ -11,5 +11,3 @@ if(area >= 100 and radio<10){
 else{
     print "No se cumple el criterio";
 }
-
-print "prueba llamar fuera del if: "+nati;

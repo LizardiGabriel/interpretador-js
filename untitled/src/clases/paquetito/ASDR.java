@@ -12,12 +12,12 @@ public class ASDR implements Parser {
     private int i = 0;
     private Token preanalisis;
     private final List<Token> tokens;
-    private final TablaSimbolos tablita = new TablaSimbolos();
 
     public ASDR(List<Token> tokens) {
         this.tokens = tokens;
         preanalisis = this.tokens.get(i);
     }
+    TablaSimbolos tablita = new TablaSimbolos();
 
     /**
      *
@@ -26,7 +26,7 @@ public class ASDR implements Parser {
     @Override
     public boolean parse() {
         List<Statement> declaraciones = programa();
-        programa();
+        //programa();
 
         if (preanalisis.tipo == TipoToken.EOF && !hayErrores) {
             System.out.println("sintaxis correcta");
@@ -104,7 +104,7 @@ public class ASDR implements Parser {
 
         match(TipoToken.SEMICOLON);
 
-        tablita.asignar(variableName.getLexema(), initializer);
+        //tablita.asignar(variableName.getLexema(), initializer);
 
         return new StmtVar(variableName, initializer);
     }
@@ -321,6 +321,7 @@ public class ASDR implements Parser {
      */
     private StmtBlock block() {
         match(TipoToken.LEFT_BRACE);
+
         List<Statement> declarations = new ArrayList<>();
         while (preanalisis.getTipo() != TipoToken.RIGHT_BRACE && preanalisis.getTipo() != TipoToken.EOF) {
             declarations.add(declaration());
@@ -734,6 +735,8 @@ public class ASDR implements Parser {
     private Token previous() {
         return this.tokens.get(i - 1);
     }
+
+
 
 
 

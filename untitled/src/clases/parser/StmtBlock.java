@@ -32,13 +32,15 @@ public class StmtBlock extends Statement{
 
     @Override
     public Object resolver(TablaSimbolos tablita) {
+        Object res = null;
+        TablaSimbolos tablitaLocal = new TablaSimbolos(tablita);
+
         for (Statement stmt : statements) {
             if (stmt != null) {
-                stmt.resolver(tablita);
-            }
+                res = stmt.resolver(tablitaLocal);
             if(stmt instanceof StmtReturn){
-                //System.out.println("yo retorno menso: " + stmt.resolver(tablita).toString());
-                return stmt.resolver(tablita).toString();
+                return res.toString();
+            }
             }
 
 

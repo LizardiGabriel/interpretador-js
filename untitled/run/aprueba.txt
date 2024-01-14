@@ -1,0 +1,9 @@
+// aprueba
+
+var a = 1;
+var b = 2;
+
+for (var i = 0; i < 5; i=i+1) {
+    var b = 3;
+    print(b);
+}
