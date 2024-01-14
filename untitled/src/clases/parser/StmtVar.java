@@ -2,6 +2,8 @@ package clases.parser;
 import clases.paquetito.TablaSimbolos;
 import clases.paquetito.Token;
 
+import static java.lang.System.exit;
+
 
 public class StmtVar extends Statement {
     final Token name;
@@ -20,8 +22,16 @@ public class StmtVar extends Statement {
 
     @Override
     public Object resolver(TablaSimbolos tablita) {
+        //System.out.println("++++++++++++++++++++++++++++++++++++++++++" + name.getLexema());
         Object value = initializer != null ? initializer.resolver(tablita) : null;
-        tablita.asignar(name.getLexema(), value);
-        return value;
+        if (tablita.existeIdentificador(name.getLexema())) {
+            System.out.println("\terror: variable ya definida: " + name.getLexema() + ". ");
+            exit(0);
+            return null;
+        }else{
+            tablita.asignar(name.getLexema(), value);
+            return value;
+
+        }
     }
 }
