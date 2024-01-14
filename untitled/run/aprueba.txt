@@ -1,15 +1,7 @@
 // aprueba
 
-var a = 1;
+var a = 4;
 var b = 2;
-
-for (var i = 0; i < 5; i=i+1) {
-
-    if(i  < 2){
-        var b = 3;
-        var c = 2;
-    }
-
-    print(b);
-    print c;
+if(a==b){
+    print a;
 }
