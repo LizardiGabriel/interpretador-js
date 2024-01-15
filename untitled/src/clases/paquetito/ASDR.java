@@ -29,16 +29,16 @@ public class ASDR implements Parser {
         //programa();
 
         if (preanalisis.tipo == TipoToken.EOF && !hayErrores) {
-            System.out.println("sintaxis correcta");
+            //System.out.println("sintaxis correcta");
 
             //resolver cada una
             System.out.println("\n\n\n//////////////////////////////////////////////////////////////");
-            System.out.println("------>ResolverCodigo:");
+            System.out.println("------>Ejecucion<------");
 
             for (Statement declaracion : declaraciones) {
                 declaracion.resolver(tablita);
             }
-            System.out.println("<------Fin Resuelto");
+            System.out.println("<------Fin de ejecucucion------>");
             System.out.println("//////////////////////////////////////////////////////////////");
 
 
@@ -55,7 +55,7 @@ public class ASDR implements Parser {
         List<Statement> declarations = new ArrayList<>();
         while (preanalisis.getTipo() != TipoToken.EOF) {
             Statement stmt = declaration();
-            System.out.println(stmt.toString());
+            //System.out.println(stmt.toString());
             declarations.add(stmt);
         }
         return declarations;
@@ -356,19 +356,6 @@ public class ASDR implements Parser {
         return name;
     }
 
-    /**
-     * Analiza una asignación opcional en el código fuente.
-     *
-     * @return Una expresión o null.
-     */
-    private Expression assignmentOptional() {
-        if (preanalisis.tipo == TipoToken.EQUAL) {
-            //System.out.println("pipi___ soytipoequal");
-            match(TipoToken.EQUAL);
-            return expression();
-        }
-        return null;
-    }
 
     /**
      * Analiza una expresión lógica en el código fuente.
@@ -467,30 +454,31 @@ public class ASDR implements Parser {
     }
 
     private Expression comparision2(Expression left) {
+        ExprLogical expb;
         switch (preanalisis.getTipo()) {
             case GREATER:
                 match(TipoToken.GREATER);
                 Token operator = previous();
                 Expression right = term();
-                ExprBinary expb = new ExprBinary(left, operator, right);
+                expb = new ExprLogical(left, operator, right);
                 return comparision2(expb);
             case GREATER_EQUAL:
                 match(TipoToken.GREATER_EQUAL);
                 operator = previous();
                 right = term();
-                expb = new ExprBinary(left, operator, right);
+                expb = new ExprLogical(left, operator, right);
                 return comparision2(expb);
             case LESS:
                 match(TipoToken.LESS);
                 operator = previous();
                 right = term();
-                expb = new ExprBinary(left, operator, right);
+                expb = new ExprLogical(left, operator, right);
                 return comparision2(expb);
             case LESS_EQUAL:
                 match(TipoToken.LESS_EQUAL);
                 operator = previous();
                 right = term();
-                expb = new ExprBinary(left, operator, right);
+                expb = new ExprLogical(left, operator, right);
                 return comparision2(expb);
             default:
                 return left;
