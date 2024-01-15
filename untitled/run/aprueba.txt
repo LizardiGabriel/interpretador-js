@@ -1,7 +1,8 @@
 // aprueba
 
-var a = 4;
+var a = 2;
 var b = 2;
-if(a==b){
-    print a;
+
+if((a==2) and (b==2) ){
+    print "lo que sea";
 }

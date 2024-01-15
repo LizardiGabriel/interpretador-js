@@ -427,13 +427,13 @@ public class ASDR implements Parser {
                 match(TipoToken.BANG_EQUAL);
                 Token operator = previous();
                 Expression right = comparison();
-                ExprBinary expb = new ExprBinary(left, operator, right);
+                ExprLogical expb = new ExprLogical(left, operator, right);
                 return equality2(expb);
             case EQUAL_EQUAL:
                 match(TipoToken.EQUAL_EQUAL);
                 operator = previous();
                 right = comparison();
-                expb = new ExprBinary(left, operator, right);
+                expb = new ExprLogical(left, operator, right);
                 return equality2(expb);
 
             default:
@@ -447,7 +447,7 @@ public class ASDR implements Parser {
     // checar la recursion ?
 
     private Expression comparison() {
-        //System.out.println("estoy en comparison");
+        //System.out.println("estoy en comparason");
         Expression result = term();
         Expression res = comparision2(result);
         return res;
